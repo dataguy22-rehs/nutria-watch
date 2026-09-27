@@ -68,6 +68,7 @@ footer{background:#10291e;color:#dbe9df;padding:28px 20px;text-align:center;font
 
 <div id="cameraControls" style="display:none;text-align:center">
 <button class="btn btn-red" id="stopCamera">STOP CAMERA</button>
+<button class="btn btn-green" id="switchCamera" style="margin-top:10px">🔄 SWITCH CAMERA</button>
 </div>
 
 <div class="status" id="status">Loading AI model…</div>
@@ -78,7 +79,7 @@ footer{background:#10291e;color:#dbe9df;padding:28px 20px;text-align:center;font
 <div id="allResults"></div>
 </div>
 
-<div class="notice"><strong>Remember:</strong> This AI is a student project and is a helpful identification tool, not proof of species. If you think you found a nutria, submit a report and include a clear photo and location.</div>
+<div class="notice"><strong>Phone tip:</strong> “Use Camera” requests your phone's <strong>rear camera</strong> first. You can switch cameras with the button if needed.<br><br><strong>Remember:</strong> This AI is a student project and is a helpful identification tool, not proof of species. If you think you found a nutria, submit a report and include a clear photo and location.</div>
 </div>
 </section>
 
@@ -167,34 +168,81 @@ document.getElementById("stopCamera").addEventListener("click",stopCamera);
 
 async function startCamera(){
   if(!model){statusEl.textContent="The AI model is still loading…";return;}
+  await openCamera("environment");
+}
+
+async function openCamera(facingMode){
+  stopCamera();
+
   try{
-    preview.innerHTML="";
-    webcam=new tmImage.Webcam(640,480,true);
-    await webcam.setup();
-    await webcam.play();
+    const video=document.createElement("video");
+    video.setAttribute("playsinline","");
+    video.setAttribute("autoplay","");
+    video.muted=true;
+    video.style.width="100%";
+    video.style.maxHeight="430px";
+    video.style.objectFit="cover";
+    video.style.borderRadius="18px";
+
+    const stream=await navigator.mediaDevices.getUserMedia({
+      video:{
+        facingMode:{ideal:facingMode},
+        width:{ideal:1280},
+        height:{ideal:720}
+      },
+      audio:false
+    });
+
+    video.srcObject=stream;
+    await video.play();
+
+    window.cameraVideo=video;
+    window.cameraStream=stream;
+    window.cameraFacingMode=facingMode;
     cameraRunning=true;
-    preview.appendChild(webcam.canvas);
+
+    preview.innerHTML="";
+    preview.appendChild(video);
     document.getElementById("cameraControls").style.display="block";
-    statusEl.textContent="Camera running — point it at the animal.";
+
+    statusEl.textContent =
+      facingMode==="environment"
+      ? "📱 Rear camera active — point it at the animal."
+      : "🤳 Front camera active — point it at the animal.";
+
     requestAnimationFrame(cameraLoop);
   }catch(e){
     console.error(e);
-    statusEl.textContent="Camera access was blocked. You can upload a photo instead.";
+    statusEl.textContent="⚠️ Camera access was blocked. Check your browser's camera permission, or upload a photo instead.";
   }
 }
+
+document.getElementById("switchCamera").addEventListener("click",async()=>{
+  const next=window.cameraFacingMode==="environment" ? "user" : "environment";
+  await openCamera(next);
+});
+
 async function cameraLoop(){
-  if(!cameraRunning)return;
-  webcam.update();
-  const predictions=await model.predict(webcam.canvas);
-  showResults(predictions);
+  if(!cameraRunning || !window.cameraVideo)return;
+  if(window.cameraVideo.readyState>=2){
+    const predictions=await model.predict(window.cameraVideo,false);
+    showResults(predictions);
+  }
   requestAnimationFrame(cameraLoop);
 }
+
 function stopCamera(){
   cameraRunning=false;
-  if(webcam){try{webcam.stop();}catch(e){}}
+  if(window.cameraStream){
+    window.cameraStream.getTracks().forEach(track=>track.stop());
+    window.cameraStream=null;
+  }
+  window.cameraVideo=null;
   document.getElementById("cameraControls").style.display="none";
-  if(!preview.querySelector("img")) preview.innerHTML='<div class="placeholder">Choose <strong>Use Camera</strong> or <strong>Upload a Photo</strong> to start.</div>';
+  if(!preview.querySelector("img"))
+    preview.innerHTML='<div class="placeholder">Choose <strong>Use Camera</strong> or <strong>Upload a Photo</strong> to start.</div>';
 }
+
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
 </script>
 </body>
