@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#163b2a">
+<title>Nutria Watch | Identify & Report Nutria</title>
+<meta name="description" content="A student innovation project to help identify and report invasive nutria in California.">
+<style>
+:root{
+  --green:#163b2a; --green2:#245b3d; --cream:#f7f3e8; --tan:#e7dcc4;
+  --orange:#e46b2e; --red:#c63d2f; --ink:#173126; --white:#fff;
+  --shadow:0 10px 30px rgba(20,45,30,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--cream);line-height:1.5}
+a{text-decoration:none;color:inherit}
+.nav{position:sticky;top:0;z-index:20;background:rgba(22,59,42,.97);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:900;letter-spacing:.5px}.navlinks{display:flex;gap:18px;font-size:.9rem}.navlinks a{opacity:.9}
+.hero{background:linear-gradient(135deg,var(--green),#2f6848);color:#fff;padding:58px 20px 50px}
+.hero-inner,.section{max-width:980px;margin:auto}
+.badge{display:inline-block;background:#ffffff1f;border:1px solid #ffffff45;padding:6px 11px;border-radius:999px;font-size:.82rem;font-weight:700}
+h1{font-size:clamp(2.5rem,9vw,5rem);line-height:.95;margin:18px 0 16px;letter-spacing:-2px}
+.hero p{font-size:1.15rem;max-width:650px;color:#e8f2eb}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px;max-width:650px}
+.btn{display:flex;align-items:center;justify-content:center;min-height:60px;border-radius:16px;padding:14px 18px;font-weight:900;text-align:center;box-shadow:var(--shadow);transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-red{background:var(--red);color:#fff}.btn-light{background:#fff;color:var(--green)}
+.section{padding:54px 20px}.section h2{font-size:clamp(1.8rem,6vw,2.8rem);margin:0 0 10px}.lead{font-size:1.05rem;max-width:720px}
+.card{background:#fff;border-radius:24px;padding:24px;box-shadow:var(--shadow);margin-top:24px}
+.stepgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+.step{background:#fff;border-radius:20px;padding:22px;box-shadow:var(--shadow)}
+.num{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--green);color:#fff;font-weight:900;margin-bottom:12px}
+.ai-wrap{background:#fff;border-radius:24px;box-shadow:var(--shadow);padding:16px;margin-top:24px}
+.ai-frame{width:100%;min-height:620px;border:0;border-radius:16px;background:#f2f2f2}
+.notice{background:#fff6df;border-left:5px solid var(--orange);padding:15px 17px;border-radius:10px;margin-top:18px}
+.report{background:var(--green);color:#fff}
+.report .card{color:var(--ink)}
+.big-report{font-size:1.2rem;min-height:72px}
+footer{background:#10291e;color:#dbe9df;padding:28px 20px;text-align:center;font-size:.88rem}
+@media(max-width:700px){
+ .navlinks{display:none}
+ .hero{padding:44px 18px 38px}
+ .actions{grid-template-columns:1fr}
+ .section{padding:42px 18px}
+ .stepgrid{grid-template-columns:1fr}
+ .ai-frame{min-height:680px}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="logo">🦫 NUTRIA WATCH</div>
+  <div class="navlinks">
+    <a href="#identify">Identify</a>
+    <a href="#report">Report</a>
+    <a href="#about">About</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="badge">LEGO Innovation Project</span>
+    <h1>See a nutria?<br>Help protect California.</h1>
+    <p>Use our Nutria Identifier to help determine what you found, then report a suspected sighting so wildlife professionals can investigate it.</p>
+    <div class="actions">
+      <a class="btn btn-light" href="#identify">📷 IDENTIFY A NUTRIA</a>
+      <a class="btn btn-red" href="https://ee.kobotoolbox.org/x/vQA9B26v" target="_blank" rel="noopener">🚨 REPORT A SIGHTING</a>
+    </div>
+  </div>
+</header>
+
+<section class="section" id="identify">
+  <h2>📸 Not sure if it's a nutria?</h2>
+  <p class="lead">Try our student-built AI Nutria Identifier. Upload or take a photo and see what the model thinks.</p>
+  <div class="ai-wrap">
+    <iframe class="ai-frame" title="Nutria AI Identifier"
+      src="https://teachablemachine.withgoogle.com/models/_-7zE8Kk7/"></iframe>
+  </div>
+  <div class="notice"><strong>Important:</strong> The AI is a student project and should be treated as a helpful identification tool—not proof that an animal is a nutria. If you think you found one, submit a report with your observations and photos.</div>
+</section>
+
+<section class="section report" id="report">
+  <div class="section" style="padding:0">
+    <h2>🚨 Think you found one?</h2>
+    <p class="lead">Your report can help wildlife agencies locate and investigate suspected nutria.</p>
+    <div class="card">
+      <h3>Report a Nutria Sighting</h3>
+      <p>Use our GIS reporting form to provide the location, photos, and other information about your observation.</p>
+      <a class="btn btn-red big-report" href="https://ee.kobotoolbox.org/x/vQA9B26v" target="_blank" rel="noopener">OPEN THE REPORTING FORM →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <h2>How it works</h2>
+  <p class="lead">Our goal is to make nutria reporting easier for people using a phone in the field.</p>
+  <div class="stepgrid">
+    <div class="step"><div class="num">1</div><h3>Identify</h3><p>Use the AI model to help decide whether the animal may be a nutria.</p></div>
+    <div class="step"><div class="num">2</div><h3>Document</h3><p>Take a clear photo and note where and when you saw the animal.</p></div>
+    <div class="step"><div class="num">3</div><h3>Report</h3><p>Submit the sighting through our GIS reporting form.</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="card">
+    <h2>Why report nutria?</h2>
+    <p>Nutria are invasive rodents that can damage wetlands, waterways, levees and other habitat. Early detection helps wildlife agencies respond to suspected sightings.</p>
+    <p><strong>Never approach, touch, or attempt to capture wildlife.</strong></p>
+  </div>
+</section>
+
+<footer>
+  <div>🦫 Nutria Watch — Student Innovation Project</div>
+  <div style="margin-top:8px">This is an educational project and is not affiliated with the California Department of Fish and Wildlife.</div>
+</footer>
+</body>
+</html>
