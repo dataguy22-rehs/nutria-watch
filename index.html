@@ -32,6 +32,18 @@ h1{font-size:clamp(2.5rem,9vw,5rem);line-height:.95;margin:18px 0 16px;letter-sp
 footer{background:#10291e;color:#dbe9df;padding:28px 20px;text-align:center;font-size:.88rem}
 @media(max-width:700px){.navlinks{display:none}.hero{padding:44px 18px 38px}.actions,.controls{grid-template-columns:1fr}.section{padding:42px 18px}.stepgrid{grid-template-columns:1fr}.btn{min-height:64px}}
 </style>
+
+<style>
+.result-likely,.result-possible,.result-uncertain,.result-other{
+  margin-top:12px;padding:16px;border-radius:14px;font-weight:800;text-align:center;
+  border:2px solid currentColor;transition:.2s ease;
+}
+.result-likely{background:#e9f8ee;color:#176b36}
+.result-possible{background:#fff8dc;color:#8a6500}
+.result-uncertain{background:#f1f3f5;color:#555}
+.result-other{background:#eef4ff;color:#2457a6}
+</style>
+
 </head>
 <body>
 <nav class="nav">
@@ -147,6 +159,49 @@ function showResults(predictions){
   results.style.display="block";
 }
 
+function updateResultCard(label, confidence){
+  const pct = Math.round(confidence * 100);
+  const resultEl = document.getElementById("prediction") || document.getElementById("result");
+  const detailEl = document.getElementById("prediction-detail") || document.getElementById("result-detail");
+  if(!resultEl) return;
+
+  let title, detail, cls;
+  if(label.toLowerCase().includes("nutria")){
+    if(pct >= 90){
+      title = "🦫 Likely Nutria";
+      detail = `The AI is ${pct}% confident this image resembles a nutria.`;
+      cls = "result-likely";
+    } else if(pct >= 70){
+      title = "🟡 Possible Nutria";
+      detail = `The AI is ${pct}% confident this image resembles a nutria. Consider taking another photo before reporting.`;
+      cls = "result-possible";
+    } else {
+      title = "🔎 Uncertain";
+      detail = `The AI is only ${pct}% confident. Try another photo with the animal clearly visible.`;
+      cls = "result-uncertain";
+    }
+  } else {
+    if(pct >= 90){
+      title = "🔎 Likely Other Animal";
+      detail = `The AI is ${pct}% confident this image does not match its nutria class.`;
+      cls = "result-other";
+    } else if(pct >= 70){
+      title = "🟡 Probably Not Nutria";
+      detail = `The AI is ${pct}% confident this image does not match its nutria class.`;
+      cls = "result-possible";
+    } else {
+      title = "🔎 Uncertain";
+      detail = `The AI is only ${pct}% confident. Try another photo with the animal clearly visible.`;
+      cls = "result-uncertain";
+    }
+  }
+
+  resultEl.textContent = title;
+  resultEl.className = cls;
+  if(detailEl) detailEl.textContent = detail;
+}
+
+
 async function predictImage(img){
   if(!model){statusEl.textContent="The AI model is still loading…";return;}
   statusEl.textContent="Analyzing photo…";
@@ -245,5 +300,13 @@ function stopCamera(){
 
 function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]));}
 </script>
+
+<div id="result-actions" style="margin-top:12px;text-align:center;">
+  <a id="report-cta" href="https://ee.kobotoolbox.org/x/vQA9B26v" target="_blank"
+     style="display:none;text-decoration:none;padding:12px 18px;border-radius:10px;font-weight:800;background:#c62828;color:white;">
+     🚨 REPORT THIS SIGHTING
+  </a>
+</div>
+
 </body>
 </html>
